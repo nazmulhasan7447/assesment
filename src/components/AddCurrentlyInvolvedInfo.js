@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Table from "react-bootstrap/Table";
 import { Container, Row, Col } from "react-bootstrap";
 import { size } from "lodash";
 import { useSnackbar } from "notistack";
 import cryptoRandomString from "crypto-random-string";
+import AppContext from "./context/AppContext";
 import { sectors } from "./Sectors";
+import UserEntries from "./User-entries-data-table";
 
 const AddCurrentlyInvolvedInfo = () => {
+  const appContext = useContext(AppContext);
+  const { entries, setEntries } = appContext || {};
   const { enqueueSnackbar } = useSnackbar();
 
-  const [entries, setEntries] = useState([]);
   const [involvedInfo, setInvolvedInfo] = useState({
     name: "",
     sector: { id: "", name: "" },
@@ -209,54 +212,7 @@ const AddCurrentlyInvolvedInfo = () => {
         <Col md={2}></Col>
       </Row>
 
-      <Row>
-        <Col md={2}></Col>
-        <Col md={8}>
-          <div className="mt-3">
-            <h5>Entries</h5>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th className="text-center">#</th>
-                  <th className="text-center">Name</th>
-                  <th className="text-center">Sector</th>
-                  <th className="text-center">Status</th>
-                  <th className="text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {size(entries)
-                  ? entries?.map((entry, index) => {
-                      return (
-                        <tr>
-                          <td className="text-center">{index + 1}</td>
-                          <td className="text-center">{entry?.name}</td>
-                          <td className="text-center">{entry?.sector?.name}</td>
-                          <td className="text-center">
-                            {entry?.isAgreed ? "Agreed" : "Denied"}
-                          </td>
-                          <td className="text-center">
-                            <button type="button" className="btn btn-info">
-                              Update
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleRemove(entry?.id)}
-                              className="btn btn-danger"
-                            >
-                              Remove
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  : ""}
-              </tbody>
-            </Table>
-          </div>
-        </Col>
-        <Col md={2}></Col>
-      </Row>
+      <UserEntries handleRemove={handleRemove} />
     </Container>
   );
 };

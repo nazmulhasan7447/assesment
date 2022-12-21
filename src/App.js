@@ -1,11 +1,15 @@
+import { useState } from "react";
+import { SnackbarProvider } from "notistack";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/style.css";
-import { SnackbarProvider } from "notistack";
 
 // custom components
+import AppContext from "./components/context/AppContext";
 import AddCurrentlyInvolvedInfo from "./components/AddCurrentlyInvolvedInfo";
 
 const App = () => {
+  const [entries, setEntries] = useState([]);
+
   return (
     <>
       <SnackbarProvider
@@ -16,7 +20,9 @@ const App = () => {
           horizontal: "center",
         }}
       >
-        <AddCurrentlyInvolvedInfo />
+        <AppContext.Provider value={{ entries, setEntries }}>
+          <AddCurrentlyInvolvedInfo />
+        </AppContext.Provider>
       </SnackbarProvider>
     </>
   );
